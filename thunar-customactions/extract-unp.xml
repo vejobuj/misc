@@ -1,0 +1,9 @@
+<action>
+	<icon>tap-extract</icon>
+	<name>Extract here</name>
+	<unique-id>1418888318475295-1</unique-id>
+	<command>xfce4-terminal --hide-toolbar --hide-menubar --icon=tap-extract --working-directory=%d -x unp -U %n</command>
+	<description>extract all files with unp</description>
+	<patterns>*.xz;*.7z;*.txz;*.wsz;*.wal;*.deb;*.gz;*.bz;*.bz2;*.tgz;*.tbz;*.tbz2;*.zoo;*.ace;*.ar;*.arj;*.cab;*.hqx;*.lha;*.lza;*.lz;*.lzma;*.lzo;*.lzx;*.pmd;*.rar;*.rpm;*.shar;*.tar;*.lzop;*.tzo;*.z;*.zip;*.jar;*.cbz;*.cbr;*.war;*.ear;*.xpi;*.adf;*.bin</patterns>
+	<other-files/>
+</action>

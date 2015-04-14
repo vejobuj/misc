@@ -1,0 +1,64 @@
+#!/bin/sh
+pkgname=enlightenment
+pkgversion=$(curl -L https://git.enlightenment.org/core/$pkgname.git/plain/NEWS|awk 'NR == 1'|grep -Ev '(=)'|tr -d '[:alpha:]').$(date -u +%Y%m%d.%H%M)
+pkgsection=Enlightenment-Git
+pkgmakedepends="efl
+evas-generic-loaders
+emotion-generic-players
+elementary
+libmount-dev
+libudev-dev
+libssl-dev
+libglib2.0-dev
+libpng-dev
+libfribidi-dev
+$(aptitude search -F %p libfontconfig[0-9]-dev$)
+$(aptitude search -F %p libluajit-[0-9]|grep 'dev')
+$(aptitude search -F %p libsndfile[0-9]-dev$)
+libpulse-dev
+libbullet-dev
+$(aptitude search -F %p libxcb[0-9]-dev$)
+$(aptitude search -F %p libxcb-keysyms[0-9]-dev$)
+$(aptitude search -F %p libxcb-shape[0-9]-dev$)
+libharfbuzz-dev
+libsystemd-dev
+libsystemd-journal-dev
+libsystemd-id128-dev
+libsystemd-daemon-dev
+doxygen"
+pkgdepends="efl
+evas-generic-loaders
+emotion-generic-players
+elementary
+$(aptitude search -F %p libxcb[0-9]$)
+$(aptitude search -F %p libxcb-keysyms[0-9]$)
+$(aptitude search -F %p libxcb-shape[0-9]$)"
+pkgrecommends="connman"
+pkgnodepends="liboss4-salsa-asound2
+libasound2"
+pkgfakes="e17
+e17-data
+e17-dbg
+e17-dev"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib/$(gcc -print-multiarch) -name "*.so" | sed "s#${filedir}##g")
+$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/core/$pkgname.git ${builddir}
+	./autogen.sh \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+	###fix permissions for cpufreq
+cat <<\EOF > "$pkg_debdir"/postinst
+#!/bin/sh
+
+set -e
+
+cd /usr/lib/*-*-gnu/enlightenment/modules/cpufreq/*$(arch)-ver-autocannoli*/
+chmod u+s,a+x freqset
+EOF
+}

@@ -1,0 +1,9 @@
+<action>
+	<icon>system-run</icon>
+	<name>Install here in local prefix</name>
+	<unique-id>1419972869677542-18</unique-id>
+	<command>xfce4-terminal --hide-toolbar --hide-menubar --icon=system-run --working-directory=%d -x env HOME=%f.drive WINEPREFIX=%f.drive wine explorer /desktop=%n.800x600 %f</command>
+	<description>creates a wineprefix in this folder to install/extract a wine app</description>
+	<patterns>*.exe;*.msi</patterns>
+	<other-files/>
+</action>

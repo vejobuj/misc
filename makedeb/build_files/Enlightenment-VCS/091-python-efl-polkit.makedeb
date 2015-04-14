@@ -1,0 +1,19 @@
+#!/bin/sh
+pkgname=polkit-efl
+pkgsection=Enlightenment-Git
+pkgmakedepends="python
+libpython-dev"
+pkgdepends="efl
+elementary
+python
+python-psutil
+python-efl
+policykit-1
+libpolkit-agent-1-dev
+$(aptitude search ^consolekit$ ^systemd$|grep '^i '|sed 's/^....//'|awk '{print $1}')"
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/misc/polkit-efl.git ${builddir}
+	python setup.py build
+	python setup.py install --root=${filedir} --optimize=1 --prefix=/usr
+	mv ${filedir}/usr/lib/python2.7/site-packages ${filedir}/usr/lib/python2.7/dist-packages
+}

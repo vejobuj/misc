@@ -1,0 +1,18 @@
+####unstable
+
+#debian
+deb ftp://ftp.de.debian.org/debian unstable main contrib non-free
+
+#deb-multimedia
+#deb http://debian.ids-services.de/debian-multimedia/ unstable main
+
+#Siduction
+#deb http://packages.siduction.org/base unstable main
+#deb http://packages.siduction.org/extra unstable main contrib non-free
+#deb http://packages.siduction.org/user unstable main contrib non-free
+#deb http://packages.siduction.org/fixes unstable main contrib non-free
+#deb http://packages.siduction.org/lxqt unstable main
+#-next
+#deb http://packages.siduction.org/kdenext unstable main
+#deb http://packages.siduction.org/lxqt next main
+#deb http://packages.siduction.org/xfcenext unstable main

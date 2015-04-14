@@ -1,0 +1,21 @@
+#!/bin/sh
+pkgname=ivy-icon-theme
+pkgsection=x11
+pkgmakedepends="libgtk2.0-bin
+optipng
+imagemagick
+librsvg2-bin"
+pkgdepends="hicolor-icon-theme"
+pkgrecommends="tango-icon-theme"
+pkg_build() {
+	git clone --depth 1 -b master https://github.com/sixsixfive/ivy.git ${builddir}
+	./build.sh
+	mkdir -p "$filedir"/usr/share/icons
+	if [ -d "$builddir"/ivy-png ]; then
+		mv "$builddir"/ivy-png "$filedir"/usr/share/icons/ivy-png
+	elif [ -d "$builddir"/ivy-svg ]; then
+		mv "$builddir"/ivy-svg "$filedir"/usr/share/icons/ivy-svg
+	elif [ -d "$builddir"/ivy-mixed ]; then
+		mv "$builddir"/ivy-mixed "$filedir"/usr/share/icons/ivy-mixed
+	fi
+}

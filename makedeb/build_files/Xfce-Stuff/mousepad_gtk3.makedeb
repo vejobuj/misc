@@ -1,0 +1,24 @@
+#!/bin/sh
+pkgname=mousepad
+pkgversion=$(curl -L http://git.xfce.org/apps/$pkgname/plain/NEWS | awk 'NR==1' | awk '{print $1}').$(date -u +%Y%m%d.%H%M)-1
+pkgsection=xfce
+pkgmakedepends="libdbus-glib-1-dev
+libglib2.0-dev
+gtk-doc-tools
+libgtk-3-dev
+libdbus-1-dev
+$(aptitude search -F %p libgtksourceview-3|grep dev)
+xfce4-dev-tools
+libxml-parser-perl"
+pkg_extra_ldddepends() {
+lddchecks="/usr/bin/mousepad"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.xfce.org/apps/$pkgname ${builddir}
+	./autogen.sh --enable-debug=minimum --enable-gtk3 \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

@@ -1,0 +1,9 @@
+<action>
+	<icon>media-eject</icon>
+	<name>Unmount</name>
+	<unique-id>1418971837690252-19</unique-id>
+	<command>fusermount -u %f</command>
+	<description>unmount</description>
+	<patterns>*.mount</patterns>
+	<directories/>
+</action>

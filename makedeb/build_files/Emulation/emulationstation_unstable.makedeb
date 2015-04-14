@@ -1,0 +1,45 @@
+#!/bin/sh
+pkgname=emulationstation
+pkgsection=games
+pkgmakedepends="libgl1-mesa-dev
+libfreetype6-dev
+libfreeimage-dev
+libsdl2-dev
+libeigen3-dev
+libboost-dev
+libboost-filesystem-dev
+libboost-system-dev
+libboost-date-time-dev
+libboost-locale-dev
+libcurl4-gnutls-dev
+curl
+p7zip-full"
+pkgdepends=""
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b unstable https://github.com/Aloshi/EmulationStation.git "$builddir"
+	mkdir build; cd build
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr ..
+	make
+	make install DESTDIR="$filedir"
+	cd "$builddir"
+	curl -L http://www.emulationstation.org/downloads/themes/simple_latest.zip >simple_latest.zip
+	mkdir -p "$filedir"/etc/emulationstation/themes
+	7z x simple_latest.zip -o"$filedir"/etc/emulationstation/themes
+	install -Dm644 "$builddir/data/resources/window_icon_256.png" "$filedir/usr/share/pixmaps/emulationstation.png"
+	mkdir -p "$filedir/usr/share/applications"
+cat <<EOF >> "$filedir/usr/share/applications/emulatorstation.desktop"
+[Desktop Entry]
+Name=EmulationStation
+GenericName=Emulator front-end
+Comment=A universal emulator front-end
+Exec=emulationstation
+Terminal=false
+Type=Application
+Icon=emulationstation
+Categories=Application;Game;
+StartupNotify=false
+EOF
+}

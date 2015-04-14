@@ -1,0 +1,9 @@
+<action>
+	<icon>document-print-preview</icon>
+	<name>View</name>
+	<unique-id>1418892591771845-1</unique-id>
+	<command>exo-open --launch WebBrowser %f</command>
+	<description>god I love pdf.js</description>
+	<patterns>*.pdf;*.html</patterns>
+	<other-files/>
+</action>

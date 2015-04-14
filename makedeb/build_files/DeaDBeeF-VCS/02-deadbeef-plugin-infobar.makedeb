@@ -1,0 +1,17 @@
+#!/bin/sh
+pkgname=deadbeef-plugin-infobar
+pkgmakedepends="mercurial
+libxml2-dev
+libgtk-3-dev"
+pkgsection=sound
+pkgdepends="deadbeef
+libxml2"
+pkg_extra_ldddepends() {
+lddchecks="/usr/lib/$(gcc -print-multiarch)/deadbeef/ddb_infobar_gtk3.so"
+}
+pkg_build() {
+	hg clone https://bitbucket.org/dsimbiriatin/deadbeef-infobar ${builddir} -r default
+	mkdir -p ${filedir}/usr/lib/$(gcc -print-multiarch)/deadbeef
+	make gtk3
+	mv gtk3/ddb_infobar_gtk3.so ${filedir}/usr/lib/$(gcc -print-multiarch)/deadbeef
+}

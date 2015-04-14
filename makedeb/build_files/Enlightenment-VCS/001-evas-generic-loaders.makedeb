@@ -1,0 +1,26 @@
+#!/bin/sh
+pkgname=evas-generic-loaders
+pkgsection=Enlightenment-Git
+pkgmakedepends="efl
+$(aptitude search -F %p librsvg[0-9]-dev$)
+libraw-dev
+libspectre-dev
+libpoppler-dev
+libpoppler-private-dev
+libgstreamer-plugins-base1.0-dev
+libsystemd-dev
+libsystemd-journal-dev
+libsystemd-id128-dev
+libsystemd-daemon-dev"
+pkgdepends="efl"
+pkgfakes=libevas-loaders
+do_lddcheck=0
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/core/evas_generic_loaders.git ${builddir}
+	./autogen.sh \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

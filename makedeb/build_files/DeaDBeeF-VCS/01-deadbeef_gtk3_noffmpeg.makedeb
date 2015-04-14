@@ -1,0 +1,45 @@
+#!/bin/sh
+pkgname=deadbeef
+pkgversion=$(curl -L https://raw.githubusercontent.com/Alexey-Yakovenko/$pkgname/master/ChangeLog|awk 'NR == 1 {print $2}').$(date -u +%Y%m%d.%H%M)
+pkgsection=sound
+pkgmakedepends="yasm
+libdbus-1-dev
+$(aptitude search -F %p libcurl[4-9]-gnutls-dev$)
+libgtk-3-dev
+libfaad-dev
+libflac-dev
+libcddb-dev
+libmad0-dev
+libsamplerate-dev
+libvorbis-dev
+libzip-dev
+libsm-dev
+libice-dev
+libasound-dev
+libogg-dev
+libwavpack-dev
+libsndfile-dev
+libcdio-dev
+libsidplay2-dev
+libjansson-dev
+libmpg123-dev
+liblastfm-dev
+libimlib2-dev
+libpulse-dev"
+pkgdepends="$(aptitude search -F %p libjansson[0-9]$)
+libcddb2
+libzip2"
+pkg_extra_ldddepends() {
+lddchecks="/usr/bin/deadbeef"
+}
+pkg_build() {
+	git clone --depth 1 -b master https://github.com/Alexey-Yakovenko/deadbeef.git ${builddir}
+	./autogen.sh 
+	./configure --disable-gtk2 -disable-ffmpeg \
+	--disable-coreaudio \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

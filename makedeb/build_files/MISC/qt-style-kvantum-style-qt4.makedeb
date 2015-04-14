@@ -1,0 +1,20 @@
+#!/bin/sh
+pkgname=qt4-style-kvantum
+pkgsection=x11
+pkgmakedepends="subversion
+libqt4-dev
+libx11-dev
+libxext-dev"
+pkgdepends="libqt4-svg
+libqt4-gui
+libqt4-core
+$(aptitude search -F %p libxext[0-9]$)"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib/$(gcc -print-multiarch) -name "*.so" | sed "s#${filedir}##g")"
+}
+pkg_build() {
+	svn co https://github.com/tsujan/Kvantum/trunk/Kvantum/style "$builddir" --config-dir "/tmp"
+	/usr/lib/$(gcc -print-multiarch)/qt4/bin/qmake
+	make
+	install -Dm0644 "$builddir"/libkvantum.so "$filedir"/usr/lib/$(gcc -print-multiarch)/qt4/plugins/styles/libkvantum.so
+}

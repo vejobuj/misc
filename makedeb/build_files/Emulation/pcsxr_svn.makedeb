@@ -1,0 +1,27 @@
+#!/bin/sh
+pkgname=pcsxr
+pkgsection=games
+pkgmakedepends="subversion
+libgtk-3-dev
+libglib2.0-dev
+libsdl2-dev
+libcdio-dev
+libxml-parser-perl
+libavformat-dev
+libgl1-mesa-dev"
+pkgfakes="pcsxr-dbg"
+pkgnodepend="libavcodec-extra-56
+libavcodec56"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib/$(gcc -print-multiarch) -name "*.so" | sed "s#${filedir}##g")
+$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	svn co https://pcsxr.svn.codeplex.com/svn/pcsxr "$builddir" --config-dir "/tmp"
+	./autogen.sh --enable-ccdda --enable-libcdio --enable-opengl \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

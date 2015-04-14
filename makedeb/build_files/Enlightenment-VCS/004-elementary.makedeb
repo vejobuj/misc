@@ -1,0 +1,49 @@
+#!/bin/sh
+pkgname=elementary
+pkgsection=Enlightenment-Git
+pkgmakedepends="efl
+evas-generic-loaders
+emotion-generic-players
+libssl-dev
+libpng-dev
+libfribidi-dev
+$(aptitude search -F %p libfontconfig[0-9]-dev)
+$(aptitude search -F %p libluajit-[0-9]|grep 'dev')
+$(aptitude search -F %p libsndfile[0-9]-dev$)
+libglib2.0-dev
+libpulse-dev
+libbullet-dev
+libmount-dev
+libudev-dev
+libxp-dev
+libxss-dev
+libharfbuzz-dev
+libsystemd-dev
+libsystemd-journal-dev
+libsystemd-id128-dev
+libsystemd-daemon-dev"
+pkgdepends="efl
+evas-generic-loaders
+emotion-generic-players
+$(aptitude search -F %p libxss[0-9]$)
+$(aptitude search -F %p libxp[0-9]$)"
+pkgnodepends=""
+pkgfakes="libelementary-bin
+libelementary-data
+libelementary-dbg
+libelementary-dev
+libelementary1
+libelementary2"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib/$(gcc -print-multiarch) -name "*.so" | sed "s#${filedir}##g")
+$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/core/$pkgname.git ${builddir}
+	./autogen.sh --with-vlc \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

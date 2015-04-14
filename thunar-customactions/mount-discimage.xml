@@ -1,0 +1,9 @@
+<action>
+	<icon>media-eject</icon>
+	<name>Mount</name>
+	<unique-id>1418971732162898-16</unique-id>
+	<command>fuseiso -n -p %f %f.mount</command>
+	<description>mount</description>
+	<patterns>*.iso;*.nrg;*.bin;*.img;*.mdf</patterns>
+	<other-files/>
+</action>

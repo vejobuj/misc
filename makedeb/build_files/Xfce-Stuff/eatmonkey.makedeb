@@ -1,0 +1,24 @@
+#!/bin/sh
+pkgname=eatmonkey
+pkgversion=$(curl -L http://git.xfce.org/apps/$pkgname/plain/NEWS?h=aria2-xml-rpc | awk 'NR==1' | awk '{print $1}').$(date -u +%Y%m%d.%H%M)-1
+pkgsection=xfce
+pkgmakedepends="libnotify-dev
+libglib2.0-dev
+xfce4-dev-tools"
+pkgdepends="$(aptitude search -F %p libnotify[0-9]$)
+ruby-gtk2"
+pkgrecommends="aria2"
+pkg_build() {
+	git clone --depth 1 -b aria2-xml-rpc git://git.xfce.org/apps/$pkgname ${builddir}
+	./autogen.sh \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+	cat <<\EOF > ${filedir}/usr/bin/eatmonkey
+#!/bin/sh
+cd /usr/share/eatmonkey
+exec ruby -I"/usr/share/eatmonkey" eat.rb "$@"
+EOF
+}

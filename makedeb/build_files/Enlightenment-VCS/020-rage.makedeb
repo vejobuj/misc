@@ -1,0 +1,27 @@
+#!/bin/sh
+pkgname=rage
+pkgsection=Enlightenment-Git
+pkgmakedepends="elementary
+efl
+$(aptitude search -F %p libfontconfig[0-9]-dev)
+$(aptitude search -F %p libluajit-[0-9]|grep 'dev')
+$(aptitude search -F %p libsndfile[0-9]-dev)
+libpulse-dev
+libbullet-dev
+libudev-dev
+"
+pkgdepends="elementary
+efl"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib -name "*.so" | sed "s#${filedir}##g")
+$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/apps/rage.git ${builddir}
+	./autogen.sh \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

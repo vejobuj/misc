@@ -1,0 +1,38 @@
+#!/bin/sh
+pkgname=xfce-theme-glare
+pkgsection=x11
+pkgmakedepends="subversion
+imagemagick
+bc"
+pkgdepends="gtk2-engines-pixbuf
+gtk2-engines"
+pkgrecommends="xfwm4
+marco
+xfce4-notifyd
+xfce4-windowck-plugin
+muffin"
+pkg_build() {
+	svn co https://github.com/sixsixfive/Glare/trunk/Glare-main "$filedir"/usr/share/themes/Glare --config-dir "/tmp"
+	cd "$filedir"/usr/share/themes
+	cp Glare/COPYING "$pkg_debdir"/copyright
+	rm -rf Glare/.svn
+	ln -s Glare/extras/wmthemes/Glare-cupertino
+	ln -s Glare/extras/wmthemes/Glare-cupertino-dusK-x1.5
+	ln -s Glare/extras/wmthemes/Glare-cupertino-dusK
+	ln -s Glare/extras/wmthemes/Glare-cupertino-windowck
+	ln -s Glare/extras/wmthemes/Glare-windowck
+	mkdir -p "$filedir"/usr/share/backgrounds/xfce
+	cd "$filedir"/usr/share/backgrounds/xfce
+	ln -s ../../themes/Glare/extras/wppatterns/Glare_pattern_dark-01.png
+	ln -s ../../themes/Glare/extras/wppatterns/Glare_pattern_trans-01.png
+	cd "$filedir"/usr/share/themes/Glare
+	printf "Would you like to change the highlight/selection color now?: [y/N] \n"
+	read input
+	case $input in
+		[Yy])
+			printf "executing color script.\n"
+			./changecolor.sh;;
+		*)
+		printf "skipped\n";;
+	esac
+}

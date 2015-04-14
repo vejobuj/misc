@@ -1,0 +1,15 @@
+#!/bin/sh
+pkgname=deadbeef-plugin-archive-reader
+pkgmakedepends="subversion"
+pkgsection=sound
+pkgdepends="deadbeef"
+pkg_extra_ldddepends() {
+lddchecks="/usr/lib/$(gcc -print-multiarch)/deadbeef/ddb_archive_reader.so"
+}
+pkg_build() {
+	svn co https://subversion.assembla.com/svn/deadbeef_vfs_archive_reader/trunk/src ${builddir} --config-dir "/tmp"
+	mkdir -p ${filedir}/usr/lib/$(gcc -print-multiarch)/deadbeef
+	sed -i "s#~/.local/lib/deadbeef/#${filedir}/usr/lib/$(gcc -print-multiarch)/deadbeef#g" Makefile
+	make
+	make install
+}

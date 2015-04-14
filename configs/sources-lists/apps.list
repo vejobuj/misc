@@ -1,0 +1,7 @@
+##Apps
+#opera
+#deb http://deb.opera.com/opera-stable/ stable non-free
+#deb http://deb.opera.com/opera-beta/ stable non-free
+
+#chrome
+#deb http://dl.google.com/linux/chrome/deb/ stable main

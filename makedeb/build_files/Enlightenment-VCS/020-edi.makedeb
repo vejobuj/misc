@@ -1,0 +1,40 @@
+#!/bin/sh
+pkgname=edi
+pkgsection=Enlightenment-Git
+pkgmakedepends="efl
+evas-generic-loaders
+emotion-generic-players
+elementary
+libglib2.0-dev
+libssl-dev
+libpng-dev
+libfribidi-dev
+$(aptitude search -F %p libfontconfig[0-9]-dev)
+$(aptitude search -F %p libluajit-[0-9]|grep 'dev')
+$(aptitude search -F %p libsndfile[0-9]-dev$)
+libpulse-dev
+libbullet-dev
+libmount-dev
+libudev-dev
+libharfbuzz-dev
+libsystemd-dev
+libsystemd-journal-dev
+libsystemd-id128-dev
+libsystemd-daemon-dev"
+pkgdepends="efl
+evas-generic-loaders
+emotion-generic-players
+elementary"
+pkgfakes="edi-data"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/tools/$pkgname.git ${builddir}
+	./autogen.sh \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

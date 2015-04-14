@@ -1,0 +1,24 @@
+#!/bin/sh
+pkgname=qt5-style-kvantum
+pkgsection=x11
+pkgmakedepends="subversion
+qtbase5-dev
+libqt5svg5-dev
+libqt5x11extras5-dev
+libx11-dev
+libxext-dev"
+pkgdepends="libqt5core5a
+libqt5svg5
+libqt5x11extras5
+libqt5widgets5
+libqt5gui5
+$(aptitude search -F %p libxext[0-9]$)"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib/$(gcc -print-multiarch) -name "*.so" | sed "s#${filedir}##g")"
+}
+pkg_build() {
+	svn co https://github.com/tsujan/Kvantum/trunk/Kvantum/style "$builddir" --config-dir "/tmp"
+	/usr/lib/$(gcc -print-multiarch)/qt5/bin/qmake
+	make
+	install -Dm0644 "$builddir"/libkvantum.so "$filedir"/usr/lib/$(gcc -print-multiarch)/qt5/plugins/styles/libkvantum.so
+}

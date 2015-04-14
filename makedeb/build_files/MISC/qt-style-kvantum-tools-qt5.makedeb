@@ -1,0 +1,22 @@
+#!/bin/sh
+pkgname=kvantum-tools-qt5
+pkgsection=x11
+pkgmakedepends="subversion
+qtbase5-dev"
+pkgdepends="libqt5core5a"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	svn co https://github.com/tsujan/Kvantum/trunk/Kvantum "$builddir" --config-dir "/tmp"
+	cd "$builddir"/kvantumpreview
+	/usr/lib/$(gcc -print-multiarch)/qt5/bin/qmake
+	make
+	cd ../kvantummanager
+	/usr/lib/$(gcc -print-multiarch)/qt5/bin/qmake
+	make
+	install -Dm0755 "$builddir"/kvantumpreview/kvantumpreview "$filedir"/usr/bin/kvantumpreview
+	install -Dm0755 "$builddir"/kvantummanager/kvantummanager "$filedir"/usr/bin/kvantummanager
+	install -Dm0644 "$builddir"/kvantummanager/data/kvantummanager.desktop "$filedir"/usr/share/applications/kvantummanager.desktop
+	install -Dm0644 "$builddir"/kvantumpreview/kvantum.svg "$filedir"/usr/share/pixmaps/kvantum.svg
+}

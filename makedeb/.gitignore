@@ -1,0 +1,4 @@
+*.log
+*.deb
+Packages.gz
+build_files-noi/*

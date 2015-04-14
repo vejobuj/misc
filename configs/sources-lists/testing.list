@@ -1,0 +1,23 @@
+####testing
+
+#debian
+deb ftp://ftp.de.debian.org/debian testing main contrib non-free
+
+#deb-multimedia
+#deb http://debian.ids-services.de/debian-multimedia/ testing main
+
+#Sparky
+#deb http://sparkylinux.org/repo testing main
+
+#LMDE
+#deb http://packages.linuxmint.com/ debian main upstream import
+#deb http://debian.linuxmint.com/latest testing main contrib non-free
+#deb http://debian.linuxmint.com/latest/security testing/updates main contrib non-free
+#deb http://debian.linuxmint.com/latest/multimedia testing main non-free
+
+#SolydXK - Home/testing
+#deb http://packages.solydxk.com/production/ solydxk main upstream import kdenext
+#deb http://community.solydxk.com/production/ solydxk main
+
+# antix
+#deb http://antix.daveserver.info/testing testing main 

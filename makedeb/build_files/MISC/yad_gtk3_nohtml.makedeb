@@ -1,0 +1,21 @@
+#!/bin/sh
+pkgname=yad
+pkgversion=$(curl -L http://sourceforge.net/p/yad-dialog/code/HEAD/tree/trunk/NEWS?format=raw | awk 'NR==1' | awk '{print $2}').$(date -u +%Y%m%d.%H%M)-1
+pkgmakedepends="subversion
+libgtk-3-dev"
+pkgshordesc="Yet Another Dialog"
+pkg_extra_ldddepends() {
+lddchecks="/usr/bin/yad
+/usr/bin/yad-icon-browser"
+}
+pkg_build() {
+	svn co svn://svn.code.sf.net/p/yad-dialog/code/trunk ${builddir} --config-dir "/tmp"
+	autoreconf -i
+	./configure --with-gtk=gtk3 --enable-icon-browser  \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	sleep 5
+	make
+	make install DESTDIR=${filedir}
+}

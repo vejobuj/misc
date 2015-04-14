@@ -1,0 +1,36 @@
+#!/bin/sh
+pkgname=emotion-generic-players
+pkgsection=Enlightenment-Git
+pkgmakedepends="efl
+evas-generic-loaders
+libmount-dev
+libudev-dev
+libssl-dev
+libglib2.0-dev
+libpng-dev
+libfribidi-dev
+libharfbuzz-dev
+libvlc-dev
+$(aptitude search -F %p libfontconfig[0-9]-dev)
+$(aptitude search -F %p libluajit-[0-9]|grep 'dev')
+$(aptitude search -F %p libsndfile[0-9]-dev$)
+libsystemd-dev
+libsystemd-journal-dev
+libsystemd-id128-dev
+libsystemd-daemon-dev"
+pkgdepends="efl
+evas-generic-loaders"
+pkgfakes=libemotion-players
+do_lddcheck=1
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib/$(gcc -print-multiarch) -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/core/emotion_generic_players.git ${builddir}
+	./autogen.sh --with-vlc \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

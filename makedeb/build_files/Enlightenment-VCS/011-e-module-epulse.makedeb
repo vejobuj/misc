@@ -1,0 +1,34 @@
+#!/bin/sh
+pkgname=e-module-epulse
+pkgsection=Enlightenment-Git
+pkgmakedepends="enlightenment
+libsystemd-dev
+libsystemd-journal-dev
+libsystemd-daemon-dev
+libglib2.0-dev
+libssl-dev
+libpng-dev
+libharfbuzz-dev
+libfribidi-dev
+$(aptitude search -F %p libfontconfig[0-9]-dev$)
+$(aptitude search -F %p libluajit-[0-9]|grep 'dev')
+$(aptitude search -F %p libsndfile[0-9]-dev$)
+libpulse-dev
+libbullet-dev
+libmount-dev
+libudev-dev"
+pkgdepends="enlightenment (=$(aptitude show enlightenment|grep Version|awk '{print $2'}))
+pulseaudio"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib/$(gcc -print-multiarch) -name "*.so" | sed "s#${filedir}##g")
+$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/devs/ceolin/epulse.git ${builddir}
+	./autogen.sh \
+	--prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	--libdir=/usr/lib/$(gcc -print-multiarch) \
+	--libexecdir=/usr/lib/$(gcc -print-multiarch)/$pkgname
+	make
+	make install DESTDIR=${filedir}
+}

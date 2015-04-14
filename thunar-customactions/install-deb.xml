@@ -1,0 +1,9 @@
+<action>
+	<icon>debian-logo</icon>
+	<name>Install</name>
+	<unique-id>1418898621435255-8</unique-id>
+	<command>xfce4-terminal --hide-toolbar --hide-menubar --icon=debian-logo --working-directory=%d -x su -c &quot;apt-get update ; dpkg -i %n ; apt-get install --no-install-recommends -f ; sleep 5&quot;</command>
+	<description>install a deb package</description>
+	<patterns>*.deb</patterns>
+	<other-files/>
+</action>

@@ -1,0 +1,41 @@
+#!/bin/sh
+pkgname=python-efl
+pkgsection=Enlightenment-Git
+pkgmakedepends="python
+cython
+python-dbus-dev
+efl
+elementary
+libpython-dev
+libpng-dev
+libbullet-dev
+$(aptitude search -F %p libluajit-[0-9]|grep dev)
+libsystemd-dev
+libsystemd-journal-dev
+libsystemd-id128-dev
+libsystemd-daemon-dev
+$(aptitude search -F %p libdbus-[0-9]-dev$)
+$(aptitude search -F %p libfontconfig[0-9]-dev$)
+$(aptitude search -F %p libsndfile[0-9]-dev$)
+libglib2.0-dev
+libharfbuzz-dev
+libssl-dev
+libfribidi-dev
+libpulse-dev
+libmount-dev
+libudev-dev"
+pkgdepends="efl
+python-dbus
+elementary
+python
+cython
+python-efl"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/lib -name "*.so" | sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/bindings/python/python-efl.git ${builddir}
+	python setup.py build
+	python setup.py install --root=${filedir} --optimize=1 --prefix=/usr
+	mv ${filedir}/usr/lib/python2.7/site-packages ${filedir}/usr/lib/python2.7/dist-packages
+}

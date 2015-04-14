@@ -1,0 +1,38 @@
+#!/bin/sh
+pkgname=ev
+pkgsection=Enlightenment-Git
+pkgmakedepends="efl
+evas-generic-loaders
+emotion-generic-players
+elementary
+libglib2.0-dev
+libssl-dev
+libpng-dev
+libfribidi-dev
+$(aptitude search -F %p libfontconfig[0-9]-dev)
+$(aptitude search -F %p libluajit-[0-9]|grep 'dev')
+$(aptitude search -F %p libsndfile[0-9]-dev$)
+libpulse-dev
+libbullet-dev
+libmount-dev
+libudev-dev
+libharfbuzz-dev
+libsystemd-dev
+libsystemd-journal-dev
+libsystemd-id128-dev
+libsystemd-daemon-dev"
+pkgdepends="efl
+evas-generic-loaders
+emotion-generic-players
+elementary"
+pkg_extra_ldddepends() {
+lddchecks="$(find ${filedir}/usr/bin -type f| sed "s#${filedir}##g")"
+}
+pkg_build() {
+	git clone --depth 1 -b master git://git.enlightenment.org/devs/discomfitor/ev.git ${builddir}
+	#sed -i 's#/usr/local#/usr#g' Makefile
+	make
+	make install DESTDIR=${filedir} PREFIX=/usr
+### dont show in menu, since it will crash if opened without an image 
+	printf "NoDisplay=true" >> ${filedir}/usr/share/applications/ev.desktop
+}
